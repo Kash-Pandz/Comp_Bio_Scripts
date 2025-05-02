@@ -30,7 +30,7 @@ def get_pae(pdb_dir):
 
     pae = []
 
-    files = sorted(glob.glob(os.path.join(pdb_dir, "*_full_data_*.json")))
+    files = sorted(glob.glob(os.path.join(pdb_dir, "*.json")))
 
     for file in files:
         with open(file, 'r') as f:
