@@ -15,7 +15,6 @@ ATOM_SELECTIONS = {
 
 def select_atom_group (universe, atom_type, chain_id=None, custom=None):
     """Create an atom group selection string."""
-
     base_sel = ATOM_SELECTIONS.get(atom_type)
     if not base_sel:
             raise ValueError(f"Invalid atom atype: {atom_type}")
