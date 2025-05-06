@@ -1,9 +1,7 @@
 import os
 import glob
-import json
 import numpy as np
 import MDAnalysis as mda
-import pandas as pd
 
 
 
