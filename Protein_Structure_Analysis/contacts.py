@@ -2,14 +2,12 @@ import MDAnalysis as mda
 from MDAnalysis.lib.distances import capped_distance
 import pandas as pd
 
-## protein-ligand or protein-protein contacts ##
 
 def find_contacts(pdb_file, selection1, selection2, cutoff_dist):
+    """Find protein-ligand or protein-protein contacts using a cutoff distance from a pdb file."""
     
-    # Load pdb file into mda.Universe
     universe = mda.Universe(pdb_file)
     
-    # Select atom groups
     group1 = universe.select_atoms(selection1)
     group2 = universe.select_atoms(selection2)
     
@@ -21,7 +19,6 @@ def find_contacts(pdb_file, selection1, selection2, cutoff_dist):
     
     left, right = contacts.T
     
-    # Extract relavant molecular hierarchy (segid (chain), resname and resid)
     group1_segids = group1[left].segids
     group2_segids = group2[right].segids
     group1_resnames = group1[left].resnames
@@ -29,7 +26,6 @@ def find_contacts(pdb_file, selection1, selection2, cutoff_dist):
     group1_resids = group1[left].resids
     group2_resids = group2[right].resids
 
-    # Create dictionaries for each residue pair that is in contact
     res_pairs = [
         {
             'segid1': segid1, 'resname1': resname1, 'resid1': resid1,
@@ -40,7 +36,6 @@ def find_contacts(pdb_file, selection1, selection2, cutoff_dist):
                group2_segids, group2_resnames, group2_resids)
     ]
 
-    # Remove duplicate contacts
     unique_res_pairs = []
     seen = set()
     for pair in res_pairs:
