@@ -1,4 +1,5 @@
 import mdtraj as md
+import numpy as np
 import pandas as pd
 
 
@@ -35,5 +36,5 @@ def get_sasa(pdb_file):
         data.append([residue.index + 1, res_name, sasa_value, rsa_value])
 
     # Store results in pandas dataframe
-    df = pd.DataFrame(data, columns=["resid", "resname", "sasa ($\AA$)", "rsa"])
+    df = pd.DataFrame(data, columns=["resid", "resname", "sasa", "rsa"])
     return df
