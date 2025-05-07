@@ -10,7 +10,8 @@ from MDAnalysis.analysis import rms
 ATOM_SELECTIONS = {
     'calpha': 'name CA',
     'backbone': 'backbone',
-    'heavy': 'not name H*'
+    'heavy': 'not name H*',
+    'all': 'protein'
 }
 
 def select_atom_group (universe, atom_type, chain_id=None, custom=None):
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Pairwise RMSD calculator for PDB files.")
     parser.add_argument('--ref_pdb', required=True, help='Reference PDB file')
     parser.add_argument('--pdb_dir', required=True, help='Directory of PDB files')
-    parser.add_argument('--atom_type', choices=['calpha', 'backbone', 'heavy'], default='calpha')
+    parser.add_argument('--atom_type', choices=['calpha', 'backbone', 'heavy', 'all'], default='calpha')
     parser.add_argument('--chain_id', help='Optional chain id')
     parser.add_argument('--custom_selection', help='Additional selection string (e.g., resid 45:50)')
     parser.add_argument('--output_csv', default='rmsd_results.csv')
