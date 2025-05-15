@@ -18,6 +18,30 @@ def split_pdb(pdb_file, ligand_name, protein_file="protein.pdb", ligand_file="li
     ligand.write(ligand_file)
 
 
+def extract_center(pdb_file, selection, output_file="centre.txt"):
+    """Extracts the geometric center of binding pocket or native ligand from a PDB file."""
+    
+    # Load PDB file into MDAnalyisis universe
+    universe = mda.Universe(pdb_file)
+
+    # Select ligand atoms 
+    ligand = universe.select_atoms(f"resname {ligand_name}")
+
+    if len(ligand) > 0:
+        cog = ligand.center_of_geometry()
+        name = f"Ligand ({selection})"
+    else:
+        pocket = universe.select_atoms("all")
+        if len(pocket) > 0:
+            cog = pocket.center_of_geometry()
+            name = "pocket"
+        else:
+            print("No ligand or pocket found in the PDB file.")
+            return None
+
+     return cog.tolist()
+
+
 def protein_to_pdbqt(prot_pdb, prot_pdbqt):
    """Convert protein pdb into a pdbqt file."""
     command = [
