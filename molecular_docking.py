@@ -44,3 +44,24 @@ def ligand_to_pdbqt(ligand_pdb, ligand_pdbqt):
     ]
     subprocess.run(command, stdout=subprocess.DEVNULL)
 
+
+def run_docking(protein_pdbqt, ligand_pdbqt, center_coords, box_size, poses, exhaustiveness=8, docked_pdbqt="docked_poses.pdbqt"):
+    """Run SMINA molecular docking."""
+
+    smina_cmd = [
+        "smina",
+        "--receptor", protein_pdbqt,
+        "--ligand", ligand_pdbqt,
+        "--center_x", str(center_coords[0]),
+        "--center_y", str(center_coords[1]),
+        "--center_z", str(center_coords[2]),
+        "--size_x", str(box_size[0]), 
+        "--size_y", str(box_size[1]), 
+        "--size_z", str(box_size[2]),
+        "--num_modes", str(poses),
+        "--exhaustiveness", str(exhaustiveness), 
+        "--out", docked_pdbqt,
+    ]
+    result = subprocess.run(smina_cmd, capture_output=True, text=True)
+    
+
