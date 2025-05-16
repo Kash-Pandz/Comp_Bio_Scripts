@@ -3,7 +3,7 @@ import torch
 
 
 def convert_pdb_to_tensor(pdb_file):
-    """ A funtion to convert PDB atom coordinates to pytorch tensor."""
+    """A function to convert PDB atom coordinates to pytorch tensor."""
 
     universe = mda.Universe(pdb_file)
 
