@@ -4,6 +4,7 @@ import MDAnalysis as mda
 
 def run_fpocket(pdb_file):
     subprocess.run(["fpocket", "-f", pdb_file], text=True)
+    
 
 def split_pdb(pdb_file, ligand_name, protein_file="protein.pdb", ligand_file="ligand.pdb"):
     """Splits input PDB file into protein and ligand files."""
