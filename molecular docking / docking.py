@@ -2,6 +2,9 @@ import subprocess
 import MDAnalysis as mda
 
 
+def run_fpocket(pdb_file):
+    subprocess.run(["fpocket", "-f", pdb_file], text=True)
+
 def split_pdb(pdb_file, ligand_name, protein_file="protein.pdb", ligand_file="ligand.pdb"):
     """Splits input PDB file into protein and ligand files."""
 
@@ -30,7 +33,7 @@ def extract_center(pdb_file, selection, output_file="centre.txt"):
         cog = ligand.center_of_geometry()
         name = f"Ligand ({selection})"
     else:
-        pocket = universe.select_atoms("all")
+        pocket = universe.select_atoms("all")  # Selection made after manual inspection of pocket PDB file obtained from fpocket
         if len(pocket) > 0:
             cog = pocket.center_of_geometry()
             name = "pocket"
