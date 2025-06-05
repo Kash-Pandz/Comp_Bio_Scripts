@@ -1,5 +1,4 @@
-import os
-import glob
+from pathlib import Path
 import argparse
 from tqdm import tqdm
 import pandas as pd
@@ -36,22 +35,23 @@ def get_rmsd(ref_atoms, sel_atoms):
 
 
 def main(ref_pdb, pdb_dir, atom_type, chain_id, custom_selection, output_csv):
-    ref_universe = mda.Universe(ref_pdb)
-    pdb_files = glob.glob(os.path.join(pdb_dir, '*.pdb'))
+    ref_pdb = Path(ref_pdb)
+    pdb_dir = Path(pdb_dir)
+    pdb_files = list(pdb_dir.glob("*.pdb"))
 
     if not pdb_files:
         print("No PDB files found.")
         return
 
+    ref_universe = mda.Universe(ref_pdb)
     ref_atoms = select_atom_group(ref_universe, atom_type, chain_id, custom_selection)
+    
     results = []
-
     for pdb_path in tqdm(pdb_files, desc="Processing PDBs"):
-        pdb_name = os.path.splitext(os.path.basename(pdb_path))[0]
         target_universe = mda.Universe(pdb_path)
         target_atoms = select_atom_group(target_universe, atom_type, chain_id, custom_selection)
         rmsd_val = get_rmsd(ref_atoms, target_atoms)
-        results.append({'reference': os.path.basename(ref_pdb), 'query': pdb_name, 'rmsd': rmsd_val})
+        results.append({'reference': ref_pdb.name, 'query': pdb_path.stem, 'rmsd': rmsd_val})
 
     pd.DataFrame(results).to_csv(output_csv, index=False)
     print(f"RMSD results saved to {output_csv}")
