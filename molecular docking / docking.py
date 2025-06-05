@@ -2,9 +2,6 @@ import subprocess
 import MDAnalysis as mda
 
 
-def run_fpocket(pdb_file):
-    subprocess.run(["fpocket", "-f", pdb_file], text=True)
-    
 
 def split_pdb(pdb_file, ligand_name, protein_file="protein.pdb", ligand_file="ligand.pdb"):
     """Splits input PDB file into protein and ligand files."""
@@ -19,7 +16,10 @@ def split_pdb(pdb_file, ligand_name, protein_file="protein.pdb", ligand_file="li
     # Write protein and ligand pdb files
     protein.write(protein_file)
     ligand.write(ligand_file)
+    
 
+### fpocket command ###
+## fpocket -f PDB_FILE ##
 
 def extract_center(pdb_file, selection, output_file="centre.txt"):
     """Extracts the geometric center of binding pocket or native ligand from a PDB file."""
