@@ -31,8 +31,7 @@ def select_atom_group (universe, atom_type, chain_id=None, custom=None):
 
 def get_rmsd(ref_atoms, sel_atoms):
     """Calculate pairwise rmsd between two protein structures."""
-    if len(ref_atoms) != len(sel_atoms):
-        raise ValueError("Atom count mismatch between ref_atoms and sel_atoms.")
+    assert len(ref_atoms) == len(sel_atoms), "Atom count mismatch between ref_atoms and sel_atoms."
     return rms.rmsd(ref_atoms.positions, sel_atoms.positions, center=True, superposition=True)
 
 
