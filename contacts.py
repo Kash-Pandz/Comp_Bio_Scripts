@@ -12,43 +12,30 @@ def find_contacts(pdb_file, selection1, selection2, cutoff_dist):
     group2 = universe.select_atoms(selection2)
     
     # Calculate contacts between two atom groups using a cutoff distance
-    contacts = capped_distance(group1,
-                               group2,
-                               cutoff_dist,
-                               return_distances=False)
-    
+    contacts = capped_distance(g1, g2, cutoff_dist, return_distances=False)
     left, right = contacts.T
-    
-    group1_segids = group1[left].segids
-    group2_segids = group2[right].segids
-    group1_resnames = group1[left].resnames
-    group2_resnames = group2[right].resnames
-    group1_resids = group1[left].resids
-    group2_resids = group2[right].resids
-
-    res_pairs = [
-        {
-            'segid1': segid1, 'resname1': resname1, 'resid1': resid1,
-            'segid2': segid2, 'resname2': resname2, 'resid2': resid2
-        }
-        for segid1, resname1, resid1, segid2, resname2, resid2
-        in zip(group1_segids, group1_resnames, group1_resids,
-               group2_segids, group2_resnames, group2_resids)
-    ]
 
     unique_res_pairs = []
     seen = set()
-    for pair in res_pairs:
-        sorted_resids = tuple(sorted([pair['resid1'], pair['resid2']]))
-        if sorted_resids not in seen:
-            seen.add(sorted_resids)
-            unique_res_pairs.append(pair)
+    for i, (l,r) in enumerate(zip(left, right)):
+        segid1, resname1, resid1 = g1[l].segid, g1[l].resname, g1[l].resid
+        segid2, resname2, resid2 = g2[r].segid, g2[r].resname, g2[r].resid
+        dist = distances[i]
 
-    df = pd.DataFrame(unique_res_pairs, columns=['resid1', 
-                                                 'resname1', 
-                                                 'segid1', 
-                                                 'resid2', 
-                                                 'resname2', 
-                                                 'segid2'])
+        pair_key = tuple(sorted([(segid1, resid1), (segid2, resid2)]))
+        if pair_key in seen:
+            continue
+        seen.add(pair_key)
+
+    unique_res_pairs.append({
+            "segid1": segid1, "resid1": resid1, "resname1": resname1,
+            "segid2": segid2, "resid2": resid2, "resname2": resname2,
+            "distance": dist
+        })
     
-    return df
+    
+    return pd.DataFrame(data, columns=[
+        "segid1", "resid1", "resname1",
+        "segid2", "resid2", "resname2",
+        "distance"
+    ])
