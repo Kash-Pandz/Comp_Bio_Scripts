@@ -39,6 +39,46 @@ def run(command, description=""):
     return return_code
 
 
+def split_pdb(pdb_file, ligand_name, protein_file="protein.pdb", ligand_file="ligand.pdb"):
+    """Splits input PDB file into protein and ligand files."""
+
+    # Load PDB file into MDAnalysis universe
+    universe = mda.Universe(pdb_file)
+
+    # Select protein and ligand atoms
+    protein = universe.select_atoms("protein")
+    ligand = universe.select_atoms(f"resname {ligand_name}")
+
+    # Write protein and ligand pdb files
+    protein.write(protein_file)
+    ligand.write(ligand_file)
+    
+
+
+def extract_center(pdb_file, selection, output_file="centre.txt"):
+    """Extracts the geometric center of binding pocket or native ligand from a PDB file."""
+    
+    # Load PDB file into MDAnalyisis universe
+    universe = mda.Universe(pdb_file)
+
+    # Select ligand atoms 
+    ligand = universe.select_atoms(f"resname {ligand_name}")
+
+    if len(ligand) > 0:
+        cog = ligand.center_of_geometry()
+        name = f"Ligand ({selection})"
+    else:
+        pocket = universe.select_atoms("all")  # Selection made after manual inspection of pocket PDB file obtained from fpocket
+        if len(pocket) > 0:
+            cog = pocket.center_of_geometry()
+            name = "pocket"
+        else:
+            print("No ligand or pocket found in the PDB file.")
+            return None
+
+     return cog.tolist()
+
+
 ### Ligand Preparation ###
 
 def prepare_ligand(smiles_file, output_dir):
@@ -210,3 +250,4 @@ def run_docking(
     run(cmd, description=f"Docking ligand {os.path.basename(ligand)}")
     logger.info(f"Docked ligand saved: {docked_pdbqt}")
     return docked_pdbqt
+
