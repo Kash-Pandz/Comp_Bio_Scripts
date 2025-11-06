@@ -210,6 +210,3 @@ def run_docking(
     run(cmd, description=f"Docking ligand {os.path.basename(ligand)}")
     logger.info(f"Docked ligand saved: {docked_pdbqt}")
     return docked_pdbqt
-
-
-#### Docking Analysis ####
